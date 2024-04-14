@@ -20,7 +20,7 @@ def convert_json_to_label(json_file):
     label_file = json_file.replace('_polygons.json', '_labelTrainIds.png')
     json2labelImg(json_file, label_file, 'trainIds')
 
-    if 'train/' in json_file:
+    if 'train\\' in json_file:
         pil_label = Image.open(label_file)
         label = np.asarray(pil_label)
         sample_class_stats = {}
@@ -96,7 +96,7 @@ def main():
 
     save_class_stats(out_dir, sample_class_stats)
 
-    split_names = ['train', 'val', 'test']
+    split_names = ['train', 'val']
 
     for split in split_names:
         filenames = []

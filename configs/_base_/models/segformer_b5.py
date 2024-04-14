@@ -8,10 +8,15 @@ _base_ = ['../../_base_/models/segformer.py']
 # model settings
 norm_cfg = dict(type='BN', requires_grad=True)
 find_unused_parameters = True
+checkpoint = 'pretrained/mit_b5.pth'
 model = dict(
     type='EncoderDecoder',
-    pretrained='pretrained/mit_b5.pth',
-    backbone=dict(type='mit_b5', style='pytorch'),
+    # pretrained='pretrained/mit_b5.pth',
+    backbone=dict(
+        type='mit_b5',
+        style='pytorch',
+        init_cfg=dict(type='Pretrained',
+                      checkpoint=checkpoint)),
     decode_head=dict(
         type='SegFormerHead',
         in_channels=[64, 128, 320, 512],

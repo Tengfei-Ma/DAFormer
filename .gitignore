@@ -104,6 +104,8 @@ venv.bak/
 .mypy_cache/
 
 data
+pretrained
+work_dirs
 .vscode
 .idea
 

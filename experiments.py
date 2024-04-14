@@ -122,7 +122,6 @@ def setup_rcs(cfg, temperature):
 
 
 def generate_experiment_cfgs(id):
-
     def config_from_vars():
         cfg = {'_base_': ['_base_/default_runtime.py'], 'n_gpus': n_gpus}
         if seed is not None:
@@ -230,7 +229,8 @@ def generate_experiment_cfgs(id):
     # UDA Architecture Comparison (Table 1)
     # -------------------------------------------------------------------------
     if id == 1:
-        seeds = [0, 1, 2]
+        # seeds = [0, 1, 2]
+        seeds = [0]
         models = [
             # Note: For the DeepLabV2 decoder, we follow AdaptSegNet as well as
             # many follow-up works using the same source code for the network
@@ -261,7 +261,8 @@ def generate_experiment_cfgs(id):
     # SegFormer Encoder / Decoder Ablation (Table 2)
     # -------------------------------------------------------------------------
     elif id == 2:
-        seeds = [0, 1, 2]
+        # seeds = [0, 1, 2]
+        seeds = [0]
         models = [
             # ('segformer', 'mitb5'),  # already run in exp 1
             ('sfa_dlv3p_nodbn', 'mitb5-del'),
@@ -315,7 +316,7 @@ def generate_experiment_cfgs(id):
             # ('adamw', 0.00006, 'poly10warm', True),  # already run in exp 1
         ]
         for (source, target), (architecture, backbone), \
-            (opt, lr, schedule, pmult), uda, seed in \
+                (opt, lr, schedule, pmult), uda, seed in \
                 itertools.product(datasets, models, opts, udas, seeds):
             cfg = config_from_vars()
             cfgs.append(cfg)
@@ -323,7 +324,8 @@ def generate_experiment_cfgs(id):
     # RCS and FD (Table 5)
     # -------------------------------------------------------------------------
     elif id == 5:
-        seeds = [0, 1, 2]
+        # seeds = [0, 1, 2]
+        seeds = [0]
         for architecture, backbone, uda, rcs_T, plcrop in [
             ('segformer', 'mitb5', 'dacs', math.inf, False),
             ('segformer', 'mitb5', 'dacs', 0.01, False),
@@ -341,7 +343,8 @@ def generate_experiment_cfgs(id):
     # Decoder Study (Table 7)
     # -------------------------------------------------------------------------
     elif id == 6:
-        seeds = [0, 1, 2]
+        # seeds = [0, 1, 2]
+        seeds = [0]
         udas = [
             'dacs_a999_fdthings',
             'target-only',
@@ -366,7 +369,8 @@ def generate_experiment_cfgs(id):
     # Final DAFormer (Table 6)
     # -------------------------------------------------------------------------
     elif id == 7:
-        seeds = [0, 1, 2]
+        # seeds = [0, 1, 2]
+        seeds = [0]
         datasets = [
             # ('gta', 'cityscapes'),  # already run in exp 6
             ('synthia', 'cityscapes'),
@@ -383,7 +387,8 @@ def generate_experiment_cfgs(id):
     # Further Datasets
     # -------------------------------------------------------------------------
     elif id == 8:
-        seeds = [0, 1, 2]
+        # seeds = [0, 1, 2]
+        seeds = [0]
         datasets = [
             ('cityscapes', 'acdc'),
             ('cityscapes', 'darkzurich'),

@@ -18,7 +18,6 @@ from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 from mmseg.models.builder import BACKBONES
 from mmseg.utils import get_root_logger
 
-
 class Mlp(nn.Module):
 
     def __init__(self,
@@ -212,11 +211,11 @@ class MixVisionTransformer(BaseModule):
 
         assert not (init_cfg and pretrained), \
             'init_cfg and pretrained cannot be setting at the same time'
-        if isinstance(pretrained, str) or pretrained is None:
-            warnings.warn('DeprecationWarning: pretrained is a deprecated, '
-                          'please use "init_cfg" instead')
-        else:
-            raise TypeError('pretrained must be a str or None')
+        # if isinstance(pretrained, str) or pretrained is None:
+        #     warnings.warn('DeprecationWarning: pretrained is a deprecated, '
+        #                   'please use "init_cfg" instead')
+        # else:
+        #     raise TypeError('pretrained must be a str or None')
 
         self.num_classes = num_classes
         self.depths = depths
@@ -323,38 +322,45 @@ class MixVisionTransformer(BaseModule):
         # self.head = nn.Linear(embed_dims[3], num_classes) \
         #     if num_classes > 0 else nn.Identity()
 
-    def _init_weights(self, m):
-        if isinstance(m, nn.Linear):
-            trunc_normal_(m.weight, std=.02)
-            if isinstance(m, nn.Linear) and m.bias is not None:
-                nn.init.constant_(m.bias, 0)
-        elif isinstance(m, nn.LayerNorm):
-            nn.init.constant_(m.bias, 0)
-            nn.init.constant_(m.weight, 1.0)
-        elif isinstance(m, nn.Conv2d):
-            fan_out = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
-            fan_out //= m.groups
-            m.weight.data.normal_(0, math.sqrt(2.0 / fan_out))
-            if m.bias is not None:
-                m.bias.data.zero_()
-
-    def init_weights(self):
-        logger = get_root_logger()
-        if self.pretrained is None:
-            logger.info('Init mit from scratch.')
-            for m in self.modules():
-                self._init_weights(m)
-        elif isinstance(self.pretrained, str):
-            logger.info('Load mit checkpoint.')
-            checkpoint = _load_checkpoint(
-                self.pretrained, logger=logger, map_location='cpu')
-            if 'state_dict' in checkpoint:
-                state_dict = checkpoint['state_dict']
-            elif 'model' in checkpoint:
-                state_dict = checkpoint['model']
-            else:
-                state_dict = checkpoint
-            self.load_state_dict(state_dict, False)
+    # def _init_weights(self, m):
+    #     if isinstance(m, nn.Linear):
+    #         trunc_normal_(m.weight, std=.02)
+    #         if isinstance(m, nn.Linear) and m.bias is not None:
+    #             nn.init.constant_(m.bias, 0)
+    #     elif isinstance(m, nn.LayerNorm):
+    #         nn.init.constant_(m.bias, 0)
+    #         nn.init.constant_(m.weight, 1.0)
+    #     elif isinstance(m, nn.Conv2d):
+    #         fan_out = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+    #         fan_out //= m.groups
+    #         m.weight.data.normal_(0, math.sqrt(2.0 / fan_out))
+    #         if m.bias is not None:
+    #             m.bias.data.zero_()
+    # -------------------------------------------------------------------------
+    # init_weights and _init_weights support use pretrained to initialize this module,
+    # if you use init_cfg to initialize this module, these methods are unnecessary
+    # def init_weights(self):
+    #     logger = get_root_logger()
+    #     if self.pretrained is None:
+    #
+    #         # logger.info('Init mit from scratch.')
+    #         # for m in self.modules():
+    #         #     self._init_weights(m)
+    #
+    #         logger.info('Load mit checkpoint.')
+    #         super().init_weights()
+    #
+    #     elif isinstance(self.pretrained, str):
+    #         logger.info('Load mit checkpoint.')
+    #         checkpoint = _load_checkpoint(
+    #             self.pretrained, logger=logger, map_location='cpu')
+    #         if 'state_dict' in checkpoint:
+    #             state_dict = checkpoint['state_dict']
+    #         elif 'model' in checkpoint:
+    #             state_dict = checkpoint['model']
+    #         else:
+    #             state_dict = checkpoint
+    #         self.load_state_dict(state_dict, False)
 
     def reset_drop_path(self, drop_path_rate):
         dpr = [

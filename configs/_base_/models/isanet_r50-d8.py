@@ -5,9 +5,10 @@
 
 # model settings
 norm_cfg = dict(type='BN', requires_grad=True)
+checkpoint='open-mmlab://resnet50_v1c'
 model = dict(
     type='EncoderDecoder',
-    pretrained='open-mmlab://resnet50_v1c',
+    # pretrained='open-mmlab://resnet50_v1c',
     backbone=dict(
         type='ResNetV1c',
         depth=50,
@@ -18,7 +19,10 @@ model = dict(
         norm_cfg=norm_cfg,
         norm_eval=False,
         style='pytorch',
-        contract_dilation=True),
+        contract_dilation=True,
+        init_cfg=dict(type='Pretrained',
+                      checkpoint=checkpoint)
+    ),
     decode_head=dict(
         type='ISAHead',
         in_channels=2048,

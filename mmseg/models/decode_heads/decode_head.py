@@ -65,8 +65,8 @@ class BaseDecodeHead(BaseModule, metaclass=ABCMeta):
                  ignore_index=255,
                  sampler=None,
                  align_corners=False,
-                 init_cfg=dict(
-                     type='Normal', std=0.01, override=dict(name='conv_seg'))):
+                 init_cfg=dict(type='Normal', std=0.01,
+                               override=dict(name='conv_seg'))):
         super(BaseDecodeHead, self).__init__(init_cfg)
         self._init_inputs(in_channels, in_index, input_transform)
         self.channels = channels
@@ -218,7 +218,7 @@ class BaseDecodeHead(BaseModule, metaclass=ABCMeta):
         output = self.conv_seg(feat)
         return output
 
-    @force_fp32(apply_to=('seg_logit', ))
+    @force_fp32(apply_to=('seg_logit',))
     def losses(self, seg_logit, seg_label, seg_weight=None):
         """Compute segmentation loss."""
         loss = dict()

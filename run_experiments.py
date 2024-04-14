@@ -100,6 +100,8 @@ if __name__ == '__main__':
                 json.dump(cfg, of, indent=4)
             config_files.append(cfg_out_file)
 
+
+
     if args.machine == 'local':
         for i, cfg in enumerate(cfgs):
             print('Run job {}'.format(cfg['name']))
